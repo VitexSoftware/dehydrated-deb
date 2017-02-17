@@ -22,7 +22,7 @@ certificate authority (letsencrypt.org).
 EOF
 
 # Provide usage information
-./dehydrated --help | sed -r 's|\./(dehydrated)|\1|'
+./dehydrated/dehydrated --help | sed -r 's|\./(dehydrated)|\1|'
 
 # Add a final newline
 echo

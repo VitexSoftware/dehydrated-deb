@@ -1,8 +1,9 @@
 Dehydrated package for Debian/Ubuntu
-=================
+====================================
 
 Adapted "Backports" package letsencrypt.sh
 
+main script is taken from [https://github.com/lukas2511/dehydrated/]
 
 Lazy admins please use repo:
 
@@ -12,5 +13,7 @@ Lazy admins please use repo:
     aptitude install dehydrated
 
 
+please feel free to use our  **dehydrated-apache2** package to configure your webserver.
 
-There is also initial support for pound called dehydrated-pound
+    
+There is also initial support for pound called **dehydrated-pound**

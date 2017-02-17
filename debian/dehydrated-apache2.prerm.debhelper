@@ -1,0 +1,13 @@
+# Automatically added by dh_apache2
+if [ "$1" = "remove" ] || [ "$1" = "deconfigure" ] ; then
+	if true; then
+		if [ -e /usr/share/apache2/apache2-maintscript-helper ] ; then
+			. /usr/share/apache2/apache2-maintscript-helper
+
+			for conf in dehydrated  ; do
+				apache2_invoke disconf $conf  || exit $?
+			done
+		fi
+	fi
+fi
+# End automatically added section

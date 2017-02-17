@@ -1,5 +1,6 @@
-dehydrated (0.3.1-7) UNRELEASED; urgency=medium
+dehydrated (0.4.0-7) UNRELEASED; urgency=medium
 
+  [ vitex ]
   * Fixed typos
   * Fixed typos
   * Fixed typos
@@ -10,7 +11,17 @@ dehydrated (0.3.1-7) UNRELEASED; urgency=medium
   * Fixed path
   * Fix of Fix
 
- -- vitex <vitex@dellnik.adminit.local>  Mon, 06 Feb 2017 12:35:32 +0100
+  [ Vítězslav Dvořák ]
+  * Initial release
+  * Initial release
+  * Initial release
+  * Initial release
+  * Initial release
+  * Initial release
+  * Initial release
+  * Initial release
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 17 Feb 2017 22:24:21 +0100
 
 dehydrated (0.3.0-2~bpo8+1) jessie-backports; urgency=medium
 
