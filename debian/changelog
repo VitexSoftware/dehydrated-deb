@@ -1,0 +1,104 @@
+dehydrated (0.3.1-7) UNRELEASED; urgency=medium
+
+  * Fixed typos
+  * Fixed typos
+  * Fixed typos
+  * Fixed typos
+  * ee65261 5 days ago exclude root certificate from certificate chain
+    @lukas2511
+  * Added cron rule Addes pound keys hook
+  * Fixed path
+  * Fix of Fix
+
+ -- vitex <vitex@dellnik.adminit.local>  Mon, 06 Feb 2017 12:35:32 +0100
+
+dehydrated (0.3.0-2~bpo8+1) jessie-backports; urgency=medium
+
+  * Rebuild for jessie-backports.
+
+ -- Mattia Rizzolo <mattia@debian.org>  Tue, 13 Dec 2016 23:37:27 +0100
+
+dehydrated (0.3.0-2) unstable; urgency=high
+
+  * Fix syntax error that could cause "unbound variable" errors in some cases.
+
+ -- Mattia Rizzolo <mattia@debian.org>  Fri, 09 Dec 2016 18:01:53 +0100
+
+dehydrated (0.3.0-1) unstable; urgency=medium
+
+  * Import new upstream release 0.3.0.
+    + Remove all Debian patches (as they were coming from upstream).
+    + Add patch to revert the upstream commit renaming config.sh to config.
+      Let's avoid another breaking change at this point, keep it for the
+      dehydrated upload.
+    + Add NEWS entry about the ACCOUNT_KEY move.
+    + Closes: #839851
+  * Bump debhelper compat level to 10.
+  * Add dependency on ca-certificates.  Closes: #838942
+  * Add patch from upstream to fix support of OpenSSL 1.1.0.  Closes: #846319
+  * Add patch to account for an already set ACCOUNT_KEY option when upgrading
+    to the multi-account structure.  Closes: #837308
+
+ -- Mattia Rizzolo <mattia@debian.org>  Fri, 02 Dec 2016 00:04:30 +0100
+
+dehydrated (0.2.0-4) unstable; urgency=medium
+
+  * Install NEWS only in the dehydrated binary.
+
+ -- Mattia Rizzolo <mattia@debian.org>  Tue, 16 Aug 2016 12:03:12 +0000
+
+dehydrated (0.2.0-3) unstable; urgency=medium
+
+  * postinst: don't print warnings if PRIVATE_KEY or PRIVATE_KEY_JSON aren't set
+
+ -- Mattia Rizzolo <mattia@debian.org>  Sun, 14 Aug 2016 11:38:05 +0000
+
+dehydrated (0.2.0-2) unstable; urgency=medium
+
+  * Update license agreement url.  Closes: #833336
+
+ -- Mattia Rizzolo <mattia@debian.org>  Wed, 03 Aug 2016 15:53:39 +0000
+
+dehydrated (0.2.0-1) unstable; urgency=medium
+
+  [ Mattia Rizzolo ]
+  * Import new upstream release 0.2.0.
+  * Install the new docs from upstream.
+  * deiban/patches:
+    + drop compatibility-with-pretty-json-fixes-202.patch: applied upstream
+    + backport from upstream Make-location-of-domains.txt-configurable-204.patch
+  * d/rules: drop unneeded override_dh_installchangelogs.
+  * d/NEWS: document the PRIVATE_KEY → ACCOUNT_KEY rename.
+
+  [ Daniel Beyer ]
+  * Change default location of domains file to /etc/dehydrated/domains.txt.
+    Closes: #824928
+  * Provide maintainer scripts in order to support 0.1.x configurations (in
+    particular, old DOMAINS_TXT location, and old PRIVATE_KEY).
+  * d/NEWS: document the DOMAINS_TXT location change.
+
+ -- Mattia Rizzolo <mattia@debian.org>  Tue, 02 Aug 2016 11:16:55 +0000
+
+dehydrated (0.1.0-3) unstable; urgency=medium
+
+  [ Daniel Beyer ]
+  * Add a README.Debian for binary package dehydrated.  Closes: #822493
+
+  [ Mattia Rizzolo ]
+  * Import patch from upstream to work with the new "pretty" json used in the
+    Let's Encrypt API.  Closes: #824903
+
+ -- Mattia Rizzolo <mattia@debian.org>  Sat, 21 May 2016 13:37:22 +0000
+
+dehydrated (0.1.0-2) unstable; urgency=medium
+
+  * Generate the manpage in a reproducible way, regardless of the timezone.
+  * Bump Standards-Version to 3.9.8, no changes needed.
+
+ -- Mattia Rizzolo <mattia@debian.org>  Sat, 23 Apr 2016 02:08:17 +0000
+
+dehydrated (0.1.0-1) unstable; urgency=medium
+
+  * Initial release. (Closes: #812174)
+
+ -- Daniel Beyer <dabe@deb.ymc.ch>  Wed, 20 Jan 2016 17:58:20 +0100

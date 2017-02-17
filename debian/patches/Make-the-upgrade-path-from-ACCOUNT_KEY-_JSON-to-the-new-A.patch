@@ -1,0 +1,45 @@
+From: Mattia Rizzolo <mattia@debian.org>
+Date: Wed, 30 Nov 2016 20:43:48 +0100
+Subject: Make the upgrade path from ACCOUNT_KEY{,
+ _JSON} to the new ACCOUNTDIR more comprehensive
+
+i.e. before it would not account for an already set ACCOUNT_KEY option
+
+Forwarded: no
+Closes: #837308
+---
+ dehydrated | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/dehydrated b/dehydrated
+index 58c0329..651148b 100755
+--- a/dehydrated
++++ b/dehydrated
+@@ -167,17 +167,19 @@ load_config() {
+   [[ -z "${ACCOUNTDIR}" ]] && ACCOUNTDIR="${BASEDIR}/accounts"
+   mkdir -p "${ACCOUNTDIR}/${CAHASH}"
+   [[ -f "${ACCOUNTDIR}/${CAHASH}/config" ]] && . "${ACCOUNTDIR}/${CAHASH}/config"
+-  ACCOUNT_KEY="${ACCOUNTDIR}/${CAHASH}/account_key.pem"
+-  ACCOUNT_KEY_JSON="${ACCOUNTDIR}/${CAHASH}/registration_info.json"
++  local new_ACCOUNT_KEY="${ACCOUNTDIR}/${CAHASH}/account_key.pem"
++  local new_ACCOUNT_KEY_JSON="${ACCOUNTDIR}/${CAHASH}/registration_info.json"
+ 
+-  if [[ -f "${BASEDIR}/private_key.pem" ]] && [[ ! -f "${ACCOUNT_KEY}" ]]; then
+-    echo "! Moving private_key.pem to ${ACCOUNT_KEY}"
+-    mv "${BASEDIR}/private_key.pem" "${ACCOUNT_KEY}"
++  if [[ -f "${ACCOUNT_KEY:-"${BASEDIR}/private_key.pem"}" ]] && [[ ! -f "${new_ACCOUNT_KEY}" ]]; then
++    echo "! Moving private_key.pem to ${new_ACCOUNT_KEY}"
++    mv -v "${ACCOUNT_KEY:-"${BASEDIR}/private_key.pem"}" "${new_ACCOUNT_KEY}"
+   fi
+-  if [[ -f "${BASEDIR}/private_key.json" ]] && [[ ! -f "${ACCOUNT_KEY_JSON}" ]]; then
+-    echo "! Moving private_key.json to ${ACCOUNT_KEY_JSON}"
+-    mv "${BASEDIR}/private_key.json" "${ACCOUNT_KEY_JSON}"
++  if [[ -f "${ACCOUNT_KEY_JSON:-"${BASEDIR}/private_key.json"}" ]] && [[ ! -f "${new_ACCOUNT_KEY_JSON}" ]]; then
++    echo "! Moving private_key.json to ${new_ACCOUNT_KEY_JSON}"
++    mv -v "${ACCOUNT_KEY_JSON:-"${BASEDIR}/private_key.json"}" "${new_ACCOUNT_KEY_JSON}"
+   fi
++  ACCOUNT_KEY="${new_ACCOUNT_KEY}"
++  ACCOUNT_KEY_JSON="${new_ACCOUNT_KEY_JSON}"
+ 
+   [[ -z "${CERTDIR}" ]] && CERTDIR="${BASEDIR}/certs"
+   [[ -z "${DOMAINS_TXT}" ]] && DOMAINS_TXT="${BASEDIR}/domains.txt"

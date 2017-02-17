@@ -1,0 +1,32 @@
+#!/bin/sh
+# postrm script for dehydrated
+#
+# see: dh_installdeb(1)
+
+set -e
+
+#DEBHELPER#
+
+case "$1" in
+  purge)
+    if [ -f "/etc/dehydrated/conf.d/000_debian_old_domains_txt_location.sh" ]; then
+      rm -f /etc/dehydrated/conf.d/000_debian_old_domains_txt_location.sh
+    fi
+
+    if [ -f "/etc/dehydrated/conf.d/zzz_debian_old_private_key_configuration_in_use.sh" ]; then
+      rm -f /etc/dehydrated/conf.d/zzz_debian_old_private_key_configuration_in_use.sh
+    fi
+  ;;
+
+  remove|disappear|upgrade|failed-upgrade|abort-install|abort-upgrade)
+  ;;
+
+  *)
+    echo "postrm called with unknown argument \`$1'" >&2
+    exit 1
+  ;;
+esac
+
+exit 0
+
+

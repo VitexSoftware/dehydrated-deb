@@ -1,0 +1,22 @@
+Updating to a new upstream release
+==================================
+This packaging makes use of git-buildpackage. Having it in place you can
+follow the instructions below to import a new upstream release.
+
+0) Make sure upstream sure upstream's repository is added as a remote
+# git remote add upstream git://github.com/lukas2511/dehydrated.git
+
+1) Fetch upstream's tags
+# git fetch upstream --tags
+
+2) Merge in the version to import
+# git merge v<VERSION>
+
+3) Manually check that the just merged in code is sane (e.g. not evil)
+# git difftool origin/debian/master
+
+4) Make sure licensing still is correct
+
+5) Update the changelog
+# gbp dch --snapshot --auto -- debian/
+

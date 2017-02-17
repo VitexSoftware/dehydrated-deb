@@ -1,0 +1,29 @@
+#!/bin/bash
+set -e
+set -o pipefail
+
+date_string="$(date -u +%F -d "$(dpkg-parsechangelog -S Date)")"
+version_string="$(dpkg-parsechangelog -S Version | cut -d- -f-1)"
+
+# Fake presence of curl for ./dehydrated
+curl(){ return 0; } && export -f curl
+
+# Provide manpage header and intro
+cat <<EOF
+.TH "dehydrated" "1" "$date_string" "$version_string" "The dehydrated ACME client"
+.SH NAME
+dehydrated - ACME client implemented in Bash
+.SH DESCRIPTION
+.B dehydrated
+is a client for signing certificates with an ACME-server implemented as a
+relatively simple Bash script. It can be used with the Let’s Encrypt
+certificate authority (letsencrypt.org).
+.SH OPTIONS
+EOF
+
+# Provide usage information
+./dehydrated --help | sed -r 's|\./(dehydrated)|\1|'
+
+# Add a final newline
+echo
+

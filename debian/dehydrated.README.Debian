@@ -1,0 +1,60 @@
+Configuring dehydrated in Debian
+====================================
+A list of possible configurations options can be found in the example at:
+/usr/share/doc/dehydrated/examples/config.sh.example
+
+Using /etc/dehydrated/conf.d/ to configure dehydrated
+-------------------------------------------------------------
+Rather than modifying the main configuration /etc/dehydrated/config.sh,
+it is recommended to change dehydrated's configuration by adding one or
+more configuration files in the directory /etc/dehydrated/conf.d/.
+
+Notable things to the behavior of conf.d:
+* Configuration files in the conf.d directory need to have a file name
+  ending with '.sh'. Any other files within this directory will be ignored
+  by dehydrated.
+* Configurations in the conf.d directory overrides dehydrated's build-in
+  defaults, as well as the main configuration (/etc/dehydrated/config.sh).
+  They are loaded in alphanumerical order, so configuration in a file named
+  '9_foo' overrides what is defined in a file named '1stuff'.
+  They do not override command line parameters provided to dehydrated.
+
+
+Providing a list of domains to dehydrated
+=============================================
+If the parameter --domains is not given to dehydrated, it tries to get
+a list of domains from the file /etc/dehydrated/domains.txt.
+This file is not shipped with the package dehydrated in Debian and has
+to be manually added to make use of this feature. An example for a domain.txt
+can be found at /usr/share/doc/dehydrated/examples/domains.txt.example.
+The file format is explained in /usr/share/doc/dehydrated/docs/domains_txt.md.
+
+
+Default location of certificates and private keys
+=================================================
+In Debian's version of dehydrated, certificates and private keys for
+domains are stored in subdirectories located at /var/lib/dehydrated/certs/.
+
+
+Automation of dehydrated
+============================
+Certificates issued by letsencrypt have a relative short time to live
+(currently 3 months, maybe shorter in the future) it is advised to run
+a cronjob which calls
+
+/usr/bin/dehydrated -c [your specific options]
+
+on a regular basis to renew certificates. You may also need to
+reload/restart your daemons to use a renewed certificate.
+
+
+Migrating from certbot to dehydrated
+========================================
+While generally possible, Debian's version of dehydrated currently does
+not officially support migration of existing certificates generated with
+certbot to dehydrated.
+For details see Debian bug #824270: <https://bugs.debian.org/824270>
+
+
+ -- Daniel Beyer <dabe@deb.ymc.ch>  Sat, 14 May 2016 17:14:37 +0200
+ -- Mattia Rizzolo <mattia@debian.org>  Tue, 02 Aug 2016 11:16:55 +0000

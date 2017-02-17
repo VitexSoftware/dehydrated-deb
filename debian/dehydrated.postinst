@@ -1,0 +1,95 @@
+#!/bin/bash
+# postinst script for dehydrated
+#
+# see: dh_installdeb(1)
+
+set -e
+
+#DEBHELPER#
+
+case "$1" in
+  configure)
+    if [ -n "$2" ] && \
+       `dpkg --compare-versions "$2" '<<' "0.2.0-1~"`; then
+      ### Only act on upgrade to 0.2.0-1 ###
+      # Get variable $BASEDIR
+      BASEDIR="$(echo $(. dehydrated -e 1>/dev/null && echo ${BASEDIR}))"
+      # Get variable $PRIVATE_KEY
+      PRIVATE_KEY="$(echo $(. dehydrated -e 1>/dev/null && echo ${PRIVATE_KEY:-}))"
+      # Get variable $PRIVATE_KEY_JSON
+      PRIVATE_KEY_JSON="$(echo $(. dehydrated -e 1>/dev/null && echo ${PRIVATE_KEY_JSON:-}))"
+      # Get variable $DOMAINS_TXT
+      eval $(dehydrated -e | grep -E -e '^declare -- DOMAINS_TXT=')
+
+      # Care about the location of domains.txt
+      if [ "/etc/dehydrated/domains.txt" = "${DOMAINS_TXT}" ] && \
+         [ -r "${BASEDIR}/domains.txt" ]; then
+        # New default location for domains.txt in use, but a domains.txt
+        # is present at the old default location. Let's provide a
+        # configuration to point domains.txt back to the old default location
+        cat > /etc/dehydrated/conf.d/000_debian_old_domains_txt_location.sh << EOF
+# This file was automatically provided by the dehydrated package during
+# upgrade from version $2.
+# Starting with version 0.2.0-1~ of dehydrated in Debian the domains.txt
+# file is looked for at '/etc/dehydrated/domains.txt'. Previously it was
+# looked for at '\${BASEDIR}/domains.txt'.
+# During upgrade from version $2 a file '\${BASEDIR}/domains.txt' was found
+# on the local system and this configuration was automatically created, since
+# otherwise the file '\${BASEDIR}/domains.txt' would no longer be respected,
+# which might prevent dehydrated to work properly.
+#
+# It is strongly suggested to move '\${BASEDIR}/domains.txt' to
+# '/etc/dehydrated/domains.txt' and remove this configuration file
+# '/etc/dehydrated/conf.d/000_debian_old_domains_txt_location' afterwards.
+#
+# NOTE: During upgrade \${BASEDIR} was set to '${BASEDIR}'
+
+DOMAINS_TXT="\${BASEDIR}/domains.txt"
+EOF
+      fi
+
+      # Care about gone config variables PRIVATE_KEY and PRIVATE_KEY_JSON
+      if [ -n "${PRIVATE_KEY}" ] || \
+         [ -n "${PRIVATE_KEY_JSON}" ]; then
+        cat > /etc/dehydrated/conf.d/zzz_debian_old_private_key_configuration_in_use.sh << EOF
+# This file was automatically provided by the dehydrated package during
+# upgrade from version $2.
+# Starting with version 0.2.0-1~ of dehydrated the configuration options
+# PRIVATE_KEY and PRIVATE_KEY_JSON have been renamed to ACCOUNT_KEY and
+# ACCOUNT_KEY_JSON.
+# During upgrade from version $2 it was found that one or both of the
+# old configuration options are in use on the local system and this
+# configuration file was automatically created, so dehydrated hopefully
+# continue to work as expected.
+#
+# It is strongly suggested to adapt the local configuration to use ACCOUNT_KEY
+# instead of PRIVATE_KEY and ACCOUNT_KEY_JSON instead of PRIVATE_KEY_JSON.
+# Once done so this configuration file should be removed
+# /etc/dehydrated/conf.d/zzz_debian_old_private_key_configuration_in_use.sh
+
+if [ -n "\${PRIVATE_KEY:-}" ]; then
+  ACCOUNT_KEY="\${PRIVATE_KEY}"
+fi
+if [ -n "\${PRIVATE_KEY_JSON:-}" ]; then
+  ACCOUNT_KEY_JSON="\${PRIVATE_KEY_JSON}"
+fi
+EOF
+
+/usr/bin/dehydrated --register --accept-terms
+
+      fi
+    fi
+  ;;
+
+  abort-upgrade|abort-remove|abort-deconfigure)
+  ;;
+
+  *)
+    echo "postinst called with unknown argument \`$1'" >&2
+    exit 1
+  ;;
+esac
+
+exit 0
+
+

@@ -1,0 +1,38 @@
+dehydrated (0.3.0-1) unstable; urgency=medium
+
+  The configuration options ACCOUNT_KEY and ACCOUNT_KEY_JSON have been
+  deprecated in favour of a multi-account structure.
+  There is a new ACCOUNTDIR option (defaulting to ${BASEDIR}/accounts) which
+  can be used to specify the starting path of where to place those keys.
+  In the event a ACCOUNT_KEY option is set and points to an existing file (or
+  a file is present in the former default location ${BASEDIR}/private_key.pem)
+  _and_ there is no file in the final new location, an automatic migration
+  is performed, by moving the relevant files.
+
+ -- Mattia Rizzolo <mattia@debian.org>  Wed, 30 Nov 2016 20:46:53 +0100
+
+dehydrated (0.2.0-1) unstable; urgency=medium
+
+  The configuration options PRIVATE_KEY and PRIVATE_KEY_JSON have been
+  renamed to ACCOUNT_KEY and ACCOUNT_KEY_JSON to avoid confusion with
+  the generic term "private key" which is already overloaded.
+  During upgrade from older versions it is checked whether those
+  old configurations options are used and an extra configuration file
+  /etc/dehydrated/conf.d/zzz_debian_old_private_key_configuration_in_use.sh
+  is automatically added to translate them to their new counterparts if
+  needed.
+
+  The default location for a domain.txt has been changed in Debian
+  from: ${BASEDIR}/domains.txt
+  to:   /etc/dehydrated/domains.txt
+  By default in Debian ${BASEDIR} is set to /var/lib/dehydrated.
+  During upgrade from older versions it is checked whether a
+  ${BASEDIR}/domains.txt is present and an extra configuration file
+  /etc/dehydrated/conf.d/000_debian_old_domains_txt_location.sh
+  is automatically added to support the previously used domain.txt file if
+  needed.
+
+  Nevertheless we strongly suggest you to adapt your setup to the newer
+  defaults and remove the automatically generated configuration files.
+
+ -- Daniel Beyer <dabe@deb.ymc.ch>  Mon, 13 Jun 2016 09:35:39 +0200

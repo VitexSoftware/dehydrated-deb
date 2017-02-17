@@ -1,0 +1,4 @@
+# dehydrated.conf is a cool name for this configuration file, and doesn't
+# really need to be named after the actual binary that ships it.
+# (and of course there is no risk of name collisions)
+non-standard-apache2-configuration-name

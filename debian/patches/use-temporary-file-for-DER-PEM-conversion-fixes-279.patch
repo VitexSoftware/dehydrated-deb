@@ -1,0 +1,52 @@
+From: Lukas Schauer <lukas@schauer.so>
+Date: Sat, 17 Sep 2016 13:02:48 +0200
+Subject: use temporary file for DER->PEM conversion (fixes #279)
+
+[Mattia: backport the commit, apply to dehydrated instead of dehydrated]
+
+Origin: upstream, https://github.com/lukas2511/dehydrated/commit/7eca8aec5a6679ce5ca507386687d130cc38ce23
+Bug: https://github.com/lukas2511/dehydrated/issues/279
+Bug-Debian: https://bugs.debian.org/846319
+---
+ dehydrated | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/dehydrated b/dehydrated
+index a46267c..58c0329 100755
+--- a/dehydrated
++++ b/dehydrated
+@@ -621,9 +621,13 @@ sign_domain() {
+   # Create fullchain.pem
+   echo " + Creating fullchain.pem..."
+   cat "${crt_path}" > "${CERTDIR}/${domain}/fullchain-${timestamp}.pem"
+-  http_request get "$(openssl x509 -in "${CERTDIR}/${domain}/cert-${timestamp}.pem" -noout -text | grep 'CA Issuers - URI:' | cut -d':' -f2-)" > "${CERTDIR}/${domain}/chain-${timestamp}.pem"
+-  if ! grep -q "BEGIN CERTIFICATE" "${CERTDIR}/${domain}/chain-${timestamp}.pem"; then
+-    openssl x509 -in "${CERTDIR}/${domain}/chain-${timestamp}.pem" -inform DER -out "${CERTDIR}/${domain}/chain-${timestamp}.pem" -outform PEM
++  tmpchain="$(_mktemp)"
++  http_request get "$(openssl x509 -in "${CERTDIR}/${domain}/cert-${timestamp}.pem" -noout -text | grep 'CA Issuers - URI:' | cut -d':' -f2-)" > "${tmpchain}"
++  if grep -q "BEGIN CERTIFICATE" "${tmpchain}"; then
++    mv "${tmpchain}" "${CERTDIR}/${domain}/chain-${timestamp}.pem"
++  else
++    openssl x509 -in "${tmpchain}" -inform DER -out "${CERTDIR}/${domain}/chain-${timestamp}.pem" -outform PEM
++    rm "${tmpchain}"
+   fi
+   cat "${CERTDIR}/${domain}/chain-${timestamp}.pem" >> "${CERTDIR}/${domain}/fullchain-${timestamp}.pem"
+ 
+@@ -797,10 +801,13 @@ command_sign_csr() {
+   if [ -n "${PARAM_FULL_CHAIN:-}" ]; then
+     # get and convert ca cert
+     chainfile="$(_mktemp)"
+-    http_request get "$(openssl x509 -in "${certfile}" -noout -text | grep 'CA Issuers - URI:' | cut -d':' -f2-)" > "${chainfile}"
+-
+-    if ! grep -q "BEGIN CERTIFICATE" "${chainfile}"; then
+-      openssl x509 -inform DER -in "${chainfile}" -outform PEM -out "${chainfile}"
++    tmpchain="$(_mktemp)"
++    http_request get "$(openssl x509 -in "${certfile}" -noout -text | grep 'CA Issuers - URI:' | cut -d':' -f2-)" > "${tmpchain}"
++    if grep -q "BEGIN CERTIFICATE" "${tmpchain}"; then
++      mv "${tmpchain}" "${chainfile}"
++    else
++      openssl x509 -in "${tmpchain}" -inform DER -out "${chainfile}" -outform PEM
++      rm "${tmpchain}"
+     fi
+ 
+     echo "# CHAIN #" >&3

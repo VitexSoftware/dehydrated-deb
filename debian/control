@@ -1,0 +1,58 @@
+Source: dehydrated
+Maintainer: Debian Let's Encrypt <letsencrypt-devel@lists.alioth.debian.org>
+Uploaders:
+ Daniel Beyer <dabe@deb.ymc.ch>,
+ Mattia Rizzolo <mattia@debian.org>,
+Section: misc
+Priority: optional
+Standards-Version: 3.9.8
+Build-Depends:
+ apache2-dev,
+ debhelper (>= 9),
+ dh-apache2,
+Vcs-Browser: https://anonscm.debian.org/git/letsencrypt/dehydrated.git
+Vcs-Git: https://anonscm.debian.org/git/letsencrypt/dehydrated.git
+Homepage: https://github.com/lukas2511/dehydrated
+
+Package: dehydrated
+Architecture: all
+Depends:
+ ca-certificates,
+ curl,
+ openssl,
+ ${misc:Depends},
+Description: ACME client implemented in Bash
+ The dehydrated ACME client allows signing certificates with an
+ ACME server, like the one provided by the Let’s Encrypt certificate
+ authority (letsencrypt.org). It is implemented as a relatively simple
+ Bash script, which uses curl to communicate with the ACME server and
+ OpenSSL to deal with keys, sign requests and certificates.
+ .
+ The ACME (Automated Certificate Management Environment) protocol makes
+ it possible to automatically obtain browser-trusted certificate.
+
+Package: dehydrated-apache2
+Architecture: all
+Depends:
+ ${misc:Depends},apache2
+Recommends:
+ dehydrated,
+ ${misc:Recommends},
+Description: dehydrated challenge response support for Apache2
+ This package provides an Apache2 config snippet to serve the http-01 challenge
+ responses for dehydrated.
+ .
+ Installing this package together with dehydrated is enough to have a fully
+ functional ACME client, including replying to the HTTP challenge.
+
+Package: dehydrated-pound
+Architecture: all
+Depends:
+ ${misc:Depends},pound
+Recommends:
+ dehydrated,
+ ${misc:Recommends},
+Description: dehydrated support for pound certificates format
+ This package provides an pound config snippet to save certificates in
+ pound specific format.
+

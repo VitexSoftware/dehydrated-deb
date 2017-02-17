@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+
+%:
+	dh $@ --with apache2
+
+
+
+
+override_dh_installman:
+	# Generate manpage
+	./debian/generate-manpage > debian/dehydrated.1
+	# Install manpage
+	# Option '--language=C' is needed, since otherwise dh_installman will
+	# think dehydrated.1 is for the sh language (Serbo-Croatian).........
+	dh_installman --language=C
+
+override_dh_installdocs:
+	dh_installdocs
+	rm -rv $(CURDIR)/debian/dehydrated/usr/share/doc/dehydrated/docs/examples
+
+get-orig-source:
+	uscan --verbose --rename --force
