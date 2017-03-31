@@ -75,6 +75,11 @@ if [ -n "\${PRIVATE_KEY_JSON:-}" ]; then
 fi
 EOF
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+printf "By installing of this package you agree with ${RED}Let\'s Encrypt terms of service${NC} which you can find here: ${GREEN}https://letsencrypt.org/documents/LE-SA-v1.1.1-August-1-2016.pdf${NC}\n"
+
 /usr/bin/dehydrated --register --accept-terms
 
       fi
