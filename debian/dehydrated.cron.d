@@ -1,1 +1,1 @@
-0 9 * * 6 /usr/bin/dehydrated -c -f /etc/dehydrated/config
+0 9 * * 6 root /usr/bin/dehydrated -c -f /etc/dehydrated/config
